@@ -211,6 +211,7 @@ export const BranchCard = ({ branch }: { branch: Branch }) => {
 export const SearchBranch = () => {
   const { handleSearchBranches, countries, clientAccounts } =
     useClientsBranchesContext()
+
   return (
     <div className='mx-auto flex flex-col items-start  gap-y-4 lg:gap-y-0 lg:pl-0 lg:flex-row lg:items-center lg:justify-between lg:w-full'>
       {/* Country */}
