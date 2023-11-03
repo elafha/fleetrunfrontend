@@ -73,8 +73,7 @@ const AccountCard = ({ account }: { account: Account }) => {
           <div className='w-full flex items-center gap-x-6'>
             <label className='text-gray-600 text-sm'>City</label>
             <p className='text-sm'>{city}</p>
-          </div>
-          
+          </div>   
           <Divider></Divider>
           {fields.map(({ name, id, defaultValue }: any, index: number) => (
             <>
