@@ -74,6 +74,7 @@ const AccountCard = ({ account }: { account: Account }) => {
             <label className='text-gray-600 text-sm'>City</label>
             <p className='text-sm'>{city}</p>
           </div>
+          
           <Divider></Divider>
           {fields.map(({ name, id, defaultValue }: any, index: number) => (
             <>
