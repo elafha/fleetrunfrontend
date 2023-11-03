@@ -62,9 +62,9 @@ const AccountCard = ({ account }: { account: Account }) => {
         </button>
         <DeleteAccount id={id} />
       </div>
-      <Divider></Divider>
       {showInfos && (
         <>
+          <Divider></Divider>
           <div className='w-full flex items-center gap-x-6'>
             <label className='text-gray-600 text-sm'>Name</label>
             <p className='text-sm'>{name}</p>
@@ -94,22 +94,22 @@ const AccountCard = ({ account }: { account: Account }) => {
               <Divider></Divider>
             </>
           ))}
+          <div className='w-full flex items-center gap-x-6'>
+            <label className='text-gray-600 text-sm'>Contract</label>
+            <div className='flex items-center gap-x-3'>
+              <Btn>
+                Upload New
+                <input
+                  type='file'
+                  className='absolute inset-0 opacity-0 cursor-pointer'
+                />
+              </Btn>
+              <Btn>Download</Btn>
+              <Btn bg='primary'>Print</Btn>
+            </div>
+          </div>
         </>
       )}
-      <div className='w-full flex items-center gap-x-6'>
-        <label className='text-gray-600 text-sm'>Contract</label>
-        <div className='flex items-center gap-x-3'>
-          <Btn>
-            Upload New
-            <input
-              type='file'
-              className='absolute inset-0 opacity-0 cursor-pointer'
-            />
-          </Btn>
-          <Btn>Download</Btn>
-          <Btn bg='primary'>Print</Btn>
-        </div>
-      </div>
     </div>
   )
 }
