@@ -215,7 +215,7 @@ export const SearchBranch = () => {
     <div className='mx-auto flex flex-col items-start  gap-y-4 lg:gap-y-0 lg:pl-0 lg:flex-row lg:items-center lg:justify-between lg:w-full'>
       {/* Country */}
       <div className='flex items-center gap-x-3 lg:ml-12'>
-        <label className='w-40 lg:w-fit'>Select Country</label>
+        <label className='w-40 text-sm lg:w-fit'>Select Country</label>
         <div className='w-72 h-10 bg-white rounded-full px-4'>
           <select
             name='country'
@@ -233,7 +233,7 @@ export const SearchBranch = () => {
       </div>
       {/* Client */}
       <div className='flex items-center gap-x-3'>
-        <label className='w-40 lg:w-fit'>Select Client</label>
+        <label className='w-40 text-sm lg:w-fit'>Select Client</label>
         <div className='w-72 h-10 bg-white rounded-full px-4'>
           <select
             name='clientAccount'
@@ -251,7 +251,7 @@ export const SearchBranch = () => {
       </div>
       {/* Search */}
       <div className='flex items-center gap-x-3 lg:mr-12'>
-        <label className='w-40 lg:w-fit'>Search</label>
+        <label className='w-40 text-sm lg:w-fit'>Search</label>
         <input
           name='search'
           id='search'
