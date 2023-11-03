@@ -103,7 +103,7 @@ export const SearchCity = () => {
   const { countries } = useAreasCitiesContext()
   return (
     <div className='w-full flex items-center gap-x-6 ml-12'>
-      <label>Select Country</label>
+      <label className='text-sm'>Select Country</label>
       <div className='w-72 h-10 bg-white rounded-full px-4'>
         <select
           name='country'
