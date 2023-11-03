@@ -73,7 +73,7 @@ const AccountCard = ({ account }: { account: Account }) => {
           <div className='w-full flex items-center gap-x-6'>
             <label className='text-gray-600 text-sm'>City</label>
             <p className='text-sm'>{city}</p>
-          </div>   
+          </div>
           <Divider></Divider>
           {fields.map(({ name, id, defaultValue }: any, index: number) => (
             <>
@@ -118,7 +118,7 @@ const SearchAccount = () => {
   const { handleSearchAccounts } = useClientsAccountsContext()
   return (
     <div className='w-full flex items-center gap-x-6 ml-12'>
-      <label>Select Country</label>
+      <label className='text-sm'>Select Country</label>
       <input
         name='search'
         id='search'
