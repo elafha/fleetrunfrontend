@@ -70,7 +70,10 @@ export const BranchCard = ({ branch }: { branch: Branch }) => {
   ]
 
   return (
-    <div className='w-full grid grid-cols-7 bg-white rounded-md p-4 shadow-lg gap-x-4'>
+    <div
+      className='w-full grid grid-cols-7 bg-white rounded-md p-4 shadow-lg gap-x-4'
+      id={id}
+    >
       {/* Infos */}
       <div
         className={`w-full flex flex-col items-start gap-y-3 ${
