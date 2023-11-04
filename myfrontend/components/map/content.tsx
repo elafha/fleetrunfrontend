@@ -40,8 +40,8 @@ export const Content = () => {
       image: faker.image.avatar(),
       status: driverStatus[faker.number.int({ max: 2, min: 0 })] as any,
       location: {
-        latitude: faker.address.latitude({ max: 22, min: 21 }),
-        longitude: faker.address.longitude({
+        latitude: faker.location.latitude({ max: 22, min: 21 }),
+        longitude: faker.location.longitude({
           max: 40,
           min: 39,
         }),
