@@ -1,4 +1,4 @@
-import { Account } from '@/interfaces'
+import { Account, Branch } from '@/interfaces'
 import { Divider } from '@nextui-org/react'
 import React from 'react'
 import { AddAccount } from './add-account'
@@ -6,6 +6,7 @@ import { DeleteAccount } from './delete-account'
 import CopyToClipboardButton from '@/components/shared/copy-to-clipboard'
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
 import { useClientsAccountsContext } from '@/context/clients/AccountsContext'
+import Link from 'next/link'
 
 const Accounts = () => {
   const { accounts } = useClientsAccountsContext()
@@ -26,7 +27,7 @@ const Accounts = () => {
 
 const AccountCard = ({ account }: { account: Account }) => {
   const [showInfos, setShowInfos] = React.useState(false)
-  const { id, name, city, discount, website, phone } = account
+  const { id, name, city, discount, website, phone, branches } = account
   const fields = [
     {
       name: 'Discount',
@@ -94,6 +95,39 @@ const AccountCard = ({ account }: { account: Account }) => {
               <Divider></Divider>
             </>
           ))}
+
+          <div className='w-full flex items-start gap-x-6'>
+            <label className='mt-2 text-gray-600 text-sm'>Branches</label>
+            {branches.length > 0 ? (
+              <div className='w-full flex flex-col items-start gap-y-2'>
+                {branches.map(
+                  (branch: { id: string; name: string }, index: number) => (
+                    <Link
+                      key={index}
+                      href={`/clients/branches?branchId=${branch.id}`}
+                      passHref
+                    >
+                      <a className='h-10 w-fit flex items-center gap-x-6 transition-all duration-300 hover:bg-gray-100 px-2 rounded-md'>
+                        <label className='text-gray-600 text-sm'>
+                          Branch #{index + 1}
+                        </label>
+                        <p className='text-sm'>
+                          {branch.name}{' '}
+                          <span className='ml-6 text-sm text-gray-400'>
+                            #{branch.id}
+                          </span>
+                        </p>
+                      </a>
+                    </Link>
+                  )
+                )}
+              </div>
+            ) : (
+              <p className='text-sm'>No branches found</p>
+            )}
+          </div>
+          <Divider></Divider>
+
           <div className='w-full flex items-center gap-x-6'>
             <label className='text-gray-600 text-sm'>Contract</label>
             <div className='flex items-center gap-x-3'>
