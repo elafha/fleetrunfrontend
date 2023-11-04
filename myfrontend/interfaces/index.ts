@@ -93,7 +93,7 @@ export interface Account {
   discount: number
   website: string
   phone: string
-  branches: Branch[]
+  branches: { id: string; name: string }[]
 }
 
 export interface Branch {
