@@ -18,6 +18,7 @@ export const AddCity = () => {
   const handler = () => setVisible(true)
   const [loading, setLoading] = React.useState<boolean>(false)
 
+  // Formik to handle the form state
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -57,7 +58,7 @@ export const AddCity = () => {
       >
         {/* Form */}
         {loading ? (
-          <Loading size='xl' className='my-3' color='success' />
+          <Loading size='xl' className='my-3' color='warning' />
         ) : (
           <form onSubmit={formik.handleSubmit}>
             <Modal.Header css={{ justifyContent: 'start' }}>

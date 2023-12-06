@@ -1,23 +1,70 @@
 import axios from 'axios'
 import NextAuth from 'next-auth'
+import { RequestInternal } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+
+async function refreshAccessToken(token: any) {
+  console.log('Refreshing access token')
+  try {
+    const url = process.env.NEXT_PUBLIC_API_URL + '/token/refresh'
+
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        refresh: token.refreshToken,
+      }),
+    })
+
+    const refreshedTokens = await response.json()
+
+    if (!response.ok) {
+      throw refreshedTokens
+    }
+
+    console.log('Refreshed access token')
+    console.log(refreshedTokens)
+
+    return {
+      ...token,
+      accessToken: refreshedTokens.data.access_token,
+      accessTokenExpires: Date.now() + refreshedTokens.data.expires,
+      refreshToken: refreshedTokens.data.refresh_token ?? token, // Fall back to old refresh token
+    }
+  } catch (error) {
+    console.log(error)
+
+    return {
+      ...token,
+      error: 'RefreshAccessTokenError',
+    }
+  }
+}
 
 export default NextAuth({
   providers: [
     CredentialsProvider({
       name: 'fleetrun-auth',
       id: 'fleetrun-auth',
+      credentials: {
+        username: {
+          type: 'text',
+        },
+        password: {
+          type: 'password',
+        },
+      },
 
-      async authorize({
-        username,
-        password,
-      }: {
-        username: string
-        password: string
-      }) {
+      async authorize(
+        credentials: Record<'username' | 'password', string> | undefined,
+        req: Pick<RequestInternal, 'method' | 'body' | 'query' | 'headers'>
+      ): Promise<any> {
         try {
+          const { username, password } = credentials!
           const response = await axios.post(
-            process.env.NEXT_PUBLIC_API_URL + '/token',
+            process.env.NEXT_PUBLIC_API_URL + '/login',
             { username, password }
           )
           const {
@@ -48,17 +95,31 @@ export default NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }: any) {
+      console.log('JWT callback')
+      console.log(token)
+
       if (user) {
         token.accessToken = user.accessToken
         token.refreshToken = user.refreshToken
         token.username = user.user.username
       }
+
       return token
     },
     async session({ session, token }: any) {
+      console.log('Session callback')
+      console.log(session)
+      console.log(token)
       session.accessToken = token.accessToken
       session.refreshToken = token.refreshToken
       session.user.username = token.username
+      session.iat = token.iat
+      session.exp = token.exp
+
+      console.log(
+        'Valid till: ' + new Date(session.exp * 1000).toLocaleString()
+      )
+
       return session
     },
   },

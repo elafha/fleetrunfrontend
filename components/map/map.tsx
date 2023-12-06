@@ -1,7 +1,6 @@
 import React from 'react-dom'
 import { renderToString } from 'react-dom/server'
 import { useEffect, useState } from 'react'
-import { useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-easybutton/src/easy-button.js'
@@ -9,6 +8,7 @@ import 'leaflet-easybutton/src/easy-button.css'
 import * as L from 'leaflet'
 import { MapPinIcon } from '../icons/map'
 import { Driver } from '@/interfaces'
+import { getDriversInArea } from '@/lib/api/map'
 
 // create a custom icon with L.divIcon and reactDOM.renderToString
 const icon = (image?: string, symbol?: string) =>
@@ -27,110 +27,34 @@ const icon = (image?: string, symbol?: string) =>
   })
 
 const Map = ({ drivers }: { drivers: Driver[] }) => {
-  const [position, setPosition] = useState<any>()
   const [map, setMap] = useState<any>(null)
-  const [control, setControl] = useState<any>(null)
-  const [changed, setChanged] = useState(false)
-  const markerRef = useRef<any>(null)
 
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     if (!map) return
-  //     if (control) {
-  //       map.removeControl(control)
-  //       setControl(null)
-  //     }
+  // add an event listener on map: load, move, zoom, etc.
+  useEffect(() => {
+    if (!map) return
 
-  //     setControl(
-  //       L.easyButton({
-  //         states: [
-  //           {
-  //             stateName: 'unloaded',
-  //             icon: '/icons/locationPin.png',
-  //             title: 'load image',
-  //             onClick: function (control: any) {
-  //               control.state('loading')
-  //               control._map.on('locationfound', function (e: any) {
-  //                 setPosition(e.latlng)
-  //                 map.flyTo(e.latlng, 18)
-  //                 control.state('loaded')
-  //               })
-  //               control._map.on('locationerror', function () {
-  //                 control.state('error')
-  //               })
-  //               control._map.locate()
-  //             },
-  //           },
-  //           {
-  //             stateName: 'loading',
-  //             icon: 'fa-spinner fa-spin',
-  //             onClick: function () {},
-  //             title: 'loading',
-  //           },
-  //           {
-  //             stateName: 'loaded',
-  //             icon: 'fa-crosshairs',
-  //             onClick: function () {},
-  //             title: 'location loaded',
-  //           },
-  //           {
-  //             stateName: 'error',
-  //             icon: 'fa-frown-o',
-  //             onClick: function () {},
-  //             title: 'location not found',
-  //           },
-  //         ],
-  //       })
-  //     )
-  //   }
-  // }, [map])
+    map.on('moveend', async () => {
+      const [min_lat, min_lng, max_lat, max_lng] = map
+        .getBounds()
+        .toBBoxString()
+        .split(',')
 
-  // useEffect(() => {
-  //   if (!map) return
-  //   if (control) {
-  //     control.addTo(map)
-  //     map.on('click', function (e: any) {
-  //       setPosition(e.latlng)
-  //       control.state('unloaded')
+      console.log('bbox:', {
+        min_lat,
+        min_lng,
+        max_lat,
+        max_lng,
+      })
 
-  //       return false
-  //     })
-  //   }
-  // }, [control, map])
-
-  const eventHandlers = {
-    dragend() {
-      const marker = markerRef?.current
-      if (marker) {
-        if (!changed) setChanged(true)
-        setPosition(marker.getLatLng())
-        control.state('unloaded')
-      }
-    },
-  }
-
-  const LocationMarker = () => {
-    if (position) {
-      const { lat, lng } = position
-
-      return (
-        <Marker
-          draggable
-          icon={icon()}
-          eventHandlers={eventHandlers}
-          position={position}
-          ref={markerRef}
-        >
-          <Popup>
-            {changed
-              ? 'Position: ' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ''
-              : 'Position: ' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ''}
-          </Popup>
-        </Marker>
-      )
-    }
-    return null
-  }
+      const drivers = await getDriversInArea({
+        min_lat,
+        min_lng,
+        max_lat,
+        max_lng,
+      })
+      console.log('drivers', drivers)
+    })
+  }, [map])
 
   return (
     <div className=''>
@@ -171,18 +95,21 @@ const DriversMarkers = ({ drivers }: { drivers: Driver[] }) => {
       {drivers.map((driver) => (
         <Marker
           key={driver.id}
-          position={[driver.location.latitude, driver.location.longitude]}
+          position={[
+            driver?.location?.latitude || 0,
+            driver?.location?.longitude || 0,
+          ]}
           icon={icon(
             driver.image,
             // first 2 letters of first name and last name
-            driver.fullName.split(' ')[0].slice(0, 1) +
-              driver.fullName.split(' ')[1].slice(0, 1) +
+            driver.username.split(' ')[0].slice(0, 1) +
+              driver.username.split(' ')[1].slice(0, 1) +
               ''
           )}
         >
           <Popup>
             <div className='flex flex-col items-center gap-y-1'>
-              <p className=''>{driver.fullName}</p>
+              <p className=''>{driver.username}</p>
               <p className=''>{driver.phone}</p>
             </div>
           </Popup>

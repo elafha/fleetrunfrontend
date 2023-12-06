@@ -15,7 +15,6 @@ export const DeleteCountry = ({ id }: { id: string }) => {
   const handleDelete = async () => {
     setLoading(true)
     // await deleteCountry(id)
-    // await deleteImage(id, 'rooms')
     // closeHandler()
     // setLoading(false)
     // refreshCountrys()
@@ -49,7 +48,7 @@ export const DeleteCountry = ({ id }: { id: string }) => {
           </Text>
         </Modal.Header>
         {loading ? (
-          <Loading size='xl' className='my-3' color='success' />
+          <Loading size='xl' className='my-3' color='warning' />
         ) : (
           <Modal.Body>
             <Flex

@@ -14,6 +14,9 @@ import {
   AreasIcon,
   PricingIcon,
   MapIcon,
+  SupportIcon,
+  OrdersIcon,
+  ReportsIcon,
 } from '../icons/sidebar'
 import { Text } from '@nextui-org/react'
 import Image from 'next/image'
@@ -32,12 +35,26 @@ export const SidebarWrapper = () => {
       subLinks: [],
     },
     {
-      title: 'Settings',
-      icon: <SettingsIcon />,
-      isActive: router.pathname === '/settings',
-      href: '/settings',
+      title: 'Orders',
+      icon: <OrdersIcon />,
+      isActive: router.pathname === '/orders',
+      href: '/orders',
       subLinks: [],
     },
+    {
+      title: 'Reports',
+      icon: <ReportsIcon />,
+      isActive: router.pathname === '/reports',
+      href: '/reports',
+      subLinks: [],
+    },
+    // {
+    //   title: 'Settings',
+    //   icon: <SettingsIcon />,
+    //   isActive: router.pathname === '/settings',
+    //   href: '/settings',
+    //   subLinks: [],
+    // },
     {
       title: 'Clients',
       icon: <ClientsIcon />,
@@ -59,9 +76,25 @@ export const SidebarWrapper = () => {
     {
       title: 'Drivers',
       icon: <DriversIcon />,
-      isActive: router.pathname === '/drivers',
+      isActive: router.pathname.includes('/drivers'),
       href: '/drivers',
-      subLinks: [],
+      subLinks: [
+        {
+          title: 'Drivers',
+          isActive: router.pathname === '/drivers/list',
+          href: '/drivers/list',
+        },
+        {
+          title: 'Teams',
+          isActive: router.pathname === '/drivers/teams',
+          href: '/drivers/teams',
+        },
+        {
+          title: 'Driver Types',
+          isActive: router.pathname === '/drivers/types',
+          href: '/drivers/types',
+        },
+      ],
     },
     {
       title: 'Customers',
@@ -100,6 +133,13 @@ export const SidebarWrapper = () => {
       href: '/pricing',
       subLinks: [],
     },
+    {
+      title: 'Support',
+      icon: <SupportIcon />,
+      isActive: router.pathname === '/support',
+      href: '/support',
+      subLinks: [],
+    },
   ]
 
   return (
@@ -123,7 +163,7 @@ export const SidebarWrapper = () => {
             height={50}
             className='object-contain w-full h-full'
           />
-          <p>Company name</p>
+          <p className='text-xl font-medium'>FleetRun</p>
         </Sidebar.Header>
         <Flex direction={'column'} justify={'between'} css={{ height: '100%' }}>
           <Sidebar.Body className='w-full'>

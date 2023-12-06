@@ -2,7 +2,6 @@ import { City } from '@/interfaces'
 import { Divider } from '@nextui-org/react'
 import React from 'react'
 import { Checkbox } from '@nextui-org/react'
-
 import { DeleteCity } from '../delete-city'
 import { FiltersIcon } from '@/components/icons/areas'
 import { Button, Modal } from '@nextui-org/react'
@@ -12,13 +11,14 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import CopyToClipboardButton from '@/components/shared/copy-to-clipboard'
 import { ChevronRightIcon } from '@heroicons/react/24/outline'
-import { useAreasCitiesContext } from '@/context/areas/CitiesContext'
-// import CityMap  from './map'
+import { useAreasCitiesContext } from '@/context/areas/cities'
 const CityMap = dynamic(() => import('./map'), { ssr: false })
 
 export const CityCard = ({ city }: { city: City }) => {
   const [showInfos, setShowInfos] = React.useState(false)
   const { id, name, driverFee, orderFee, governorateName } = city
+
+  // Input fields that the user can edit
   const fields = [
     {
       name: 'Governorate',
@@ -59,6 +59,8 @@ export const CityCard = ({ city }: { city: City }) => {
           </button>
           <DeleteCity id={id} />
         </div>
+
+        {/* Display input fields */}
         {showInfos && (
           <>
             <Divider></Divider>
@@ -85,7 +87,7 @@ export const CityCard = ({ city }: { city: City }) => {
         )}
       </div>
 
-      {/* Map */}
+      {/* City Map */}
       {showInfos && (
         <div
           className={`bg-gray-200 rounded-md relative ${
@@ -124,7 +126,7 @@ export const SearchCity = () => {
 }
 
 const GovernoratesModal = () => {
-  const [selected, setSelected] = React.useState(['buenos-aires', 'sydney'])
+  const [selected, setSelected] = React.useState([])
   const [visible, setVisible] = React.useState(false)
   const handler = () => setVisible(true)
 
@@ -165,7 +167,7 @@ const GovernoratesModal = () => {
                 label='Governorates'
                 color='warning'
                 value={selected}
-                onChange={setSelected}
+                onChange={(e: any) => setSelected(e)}
               >
                 <Checkbox value='riyadh'>Riyadh</Checkbox>
                 <Checkbox value='jeddah'>Jeddah</Checkbox>

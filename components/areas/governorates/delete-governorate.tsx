@@ -15,7 +15,6 @@ export const DeleteGovernorate = ({ id }: { id: string }) => {
   const handleDelete = async () => {
     setLoading(true)
     // await deleteGovernorate(id)
-    // await deleteImage(id, 'rooms')
     // closeHandler()
     // setLoading(false)
     // refreshGovernorates()
@@ -49,7 +48,7 @@ export const DeleteGovernorate = ({ id }: { id: string }) => {
           </Text>
         </Modal.Header>
         {loading ? (
-          <Loading size='xl' className='my-3' color='success' />
+          <Loading size='xl' className='my-3' color='warning' />
         ) : (
           <Modal.Body>
             <Flex

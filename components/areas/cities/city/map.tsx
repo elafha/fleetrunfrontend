@@ -15,6 +15,7 @@ const CityMap = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if (!map) return
+
       if (control) {
         map.removeControl(control)
         setControl(null)
@@ -30,7 +31,7 @@ const CityMap = () => {
   }, [control, map])
 
   return (
-    <div className=''>
+    <div>
       <MapContainer
         center={[21.3891, 39.8579]}
         zoom={13}

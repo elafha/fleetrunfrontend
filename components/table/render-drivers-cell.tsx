@@ -1,7 +1,7 @@
 import { Col, Row, User } from '@nextui-org/react'
 import React from 'react'
-import { DeleteDriver } from '../drivers/delete-driver'
-import { EditDriver } from '../drivers/edit-driver'
+import { DeleteDriver } from '../drivers/list/delete-driver'
+import { EditDriver } from '../drivers/list/edit-driver'
 import { Driver } from '@/interfaces'
 
 interface Props {
@@ -17,7 +17,7 @@ export const RenderCell = ({ driver, columnKey }: Props) => {
   switch (columnKey) {
     case 'name':
       return (
-        <User squared src={driver.image} name={driver.fullName} css={{ p: 0 }}>
+        <User squared src={driver.image} name={driver.username} css={{ p: 0 }}>
           #{driver.id}
         </User>
       )
@@ -25,10 +25,10 @@ export const RenderCell = ({ driver, columnKey }: Props) => {
     case 'status':
       return (
         <span
-          className={`text-xs font-semibold inline-flex px-2 py-1 rounded-full text-white ${
-            cellValue === 'Available'
+          className={`text-xs font-semibold inline-flex px-2 py-1 rounded-full text-white capitalize ${
+            cellValue === 'available'
               ? 'bg-green-400'
-              : cellValue === 'Busy'
+              : cellValue === 'busy'
               ? 'bg-orange-500'
               : 'bg-gray-400'
           }`}
