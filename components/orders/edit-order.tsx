@@ -47,7 +47,6 @@ export const EditOrder = ({ order }: { order: Order }) => {
     }),
     onSubmit: async (values) => {
       setLoading(true)
-      console.log('errors: ', formik.errors)
       const response = await updateRecord(
         {
           id: order.id,
@@ -55,7 +54,6 @@ export const EditOrder = ({ order }: { order: Order }) => {
         },
         'order'
       )
-      console.log('response: ', response)
       setVisible(false)
       setLoading(false)
       // if (response.status) {
@@ -70,11 +68,9 @@ export const EditOrder = ({ order }: { order: Order }) => {
 
   const closeHandler = () => {
     setVisible(false)
-    console.log('closed')
   }
 
   React.useEffect(() => {
-    console.log('order: ', order)
     //set formik values
     formik.setValues({ ...(order as any) })
 
@@ -111,7 +107,7 @@ export const EditOrder = ({ order }: { order: Order }) => {
                 className='text-xl font-semibold uppercase'
                 h4
               >
-                Update order
+                Edit order
               </Text>
             </Modal.Header>
             <Divider css={{ my: '$5' }} />
@@ -249,7 +245,7 @@ export const EditOrder = ({ order }: { order: Order }) => {
                       onChange={formik.handleChange}
                     >
                       <option value=''>Select Team</option>
-                      {teams.map((team: Team, index: number) => (
+                      {teams?.map((team: Team, index: number) => (
                         <option key={index} value={team.pk}>
                           {team.fields.name}
                         </option>
@@ -324,7 +320,7 @@ export const EditOrder = ({ order }: { order: Order }) => {
             <Divider css={{ my: '$5' }} />
             <Modal.Footer>
               <Button auto type='submit' className='bg-primary text-black'>
-                Update Order
+                Edit Order
               </Button>
             </Modal.Footer>
           </form>

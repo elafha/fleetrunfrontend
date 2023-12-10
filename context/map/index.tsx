@@ -18,6 +18,7 @@ export const useMapContext: {
     handleToggleDrivers: () => void
     openTab: number
     hansleSelectTab: (tab: number) => void
+    setDrivers: (drivers: any[]) => void
   }
 } = () => React.useContext(MapContext as any)
 
@@ -139,7 +140,7 @@ export const MapContextProvider = ({
 
   useEffect(() => {
     fetchOrders()
-    fetchDrivers()
+    // fetchDrivers()
   }, [])
 
   useEffect(() => {
@@ -156,6 +157,7 @@ export const MapContextProvider = ({
         showDrivers,
         selectedOrder,
         selectedDriver,
+        setDrivers,
         handleSelectOrder,
         handleSelectDriver,
         handleToggleOrders,

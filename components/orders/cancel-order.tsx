@@ -1,12 +1,12 @@
-import { Button, Loading, Modal, Text, Tooltip } from '@nextui-org/react'
+import { Button, Input, Loading, Modal, Text, Tooltip } from '@nextui-org/react'
 import React from 'react'
 import { Flex } from '../styles/flex'
-import { DeleteIcon } from '../icons/table'
 import { IconButton } from '../table/table.styled'
 import { deleteRecord } from '@/lib/api'
 import { useOrdersContext } from '@/context/order'
+import { CancelIcon } from '../icons/orders'
 
-export const DeleteOrder = ({
+export const CancelOrder = ({
   id,
   refresh,
 }: {
@@ -21,13 +21,11 @@ export const DeleteOrder = ({
 
   const closeHandler = () => {
     setVisible(false)
-    console.log('closed')
   }
 
   const handleDelete = async () => {
     setLoading(true)
     await deleteRecord(id, 'driver')
-    console.log('deleted: ', id)
     closeHandler()
     setLoading(false)
     refreshOrders()
@@ -35,9 +33,9 @@ export const DeleteOrder = ({
 
   return (
     <div>
-      <Tooltip content='Delete' color='error' onClick={handler}>
+      <Tooltip content='Cancel' color='error' onClick={handler}>
         <IconButton>
-          <DeleteIcon size={20} fill='#FF0080' />
+          <CancelIcon />
         </IconButton>
       </Tooltip>
       <Modal
@@ -50,7 +48,7 @@ export const DeleteOrder = ({
       >
         <Modal.Header>
           <Text id='modal-title' className='text-xl font-semibold uppercase' h4>
-            Delete Order
+            Cancel Order
           </Text>
         </Modal.Header>
         {loading ? (
@@ -65,10 +63,44 @@ export const DeleteOrder = ({
                 '@lg': { flexWrap: 'nowrap', gap: '$12' },
               }}
             >
-              <Text h5>Are you sure you want to delete this driver?</Text>
-              <Text h6 color='error'>
-                This action cannot be undone
+              <Text h5 className='w-full text-center'>
+                Are you sure you want to{' '}
+                <span className='text-red-500 font-semibold'>cancel</span> this
+                order #{id}?
               </Text>
+
+              {/* Reason & Note */}
+              <Input
+                bordered
+                clearable
+                fullWidth
+                size='lg'
+                placeholder='Reason for cancellation'
+                name='reason'
+                id='reason'
+                // value={formik.values.reason}
+                // onChange={formik.handleChange}
+                //   // status={
+                //     formik.touched.reason && formik.errors.reason
+                //       ? 'error'
+                //       : 'default'
+                //   }
+                // 
+              />
+              <Input
+                bordered
+                clearable
+                fullWidth
+                size='lg'
+                placeholder='Note'
+                name='note'
+                id='note'
+                // value={formik.values.note}
+                // onChange={formik.handleChange}
+                //   // status={
+                //     formik.touched.note && formik.errors.note ? 'error' : 'default'
+                //   }
+              />
             </Flex>
           </Modal.Body>
         )}
@@ -81,6 +113,7 @@ export const DeleteOrder = ({
                 onClick={() => {
                   handleDelete()
                 }}
+                
               >
                 Delete
               </Button>

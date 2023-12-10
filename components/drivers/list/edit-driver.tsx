@@ -47,7 +47,6 @@ export const EditDriver = ({ driver }: { driver: Driver }) => {
     }),
     onSubmit: async (values) => {
       setLoading(true)
-      console.log('errors: ', formik.errors)
       const response = await updateRecord(
         {
           id: driver.id,
@@ -55,7 +54,6 @@ export const EditDriver = ({ driver }: { driver: Driver }) => {
         },
         'driver'
       )
-      console.log('response: ', response)
       setVisible(false)
       setLoading(false)
       // if (response.status) {
@@ -70,11 +68,9 @@ export const EditDriver = ({ driver }: { driver: Driver }) => {
 
   const closeHandler = () => {
     setVisible(false)
-    console.log('closed')
   }
 
   React.useEffect(() => {
-    console.log('driver: ', driver)
     //set formik values
     formik.setValues({ ...(driver as any) })
 
@@ -111,7 +107,7 @@ export const EditDriver = ({ driver }: { driver: Driver }) => {
                 className='text-xl font-semibold uppercase'
                 h4
               >
-                Update driver
+                Edit driver
               </Text>
             </Modal.Header>
             <Divider css={{ my: '$5' }} />
@@ -249,7 +245,7 @@ export const EditDriver = ({ driver }: { driver: Driver }) => {
                       onChange={formik.handleChange}
                     >
                       <option value=''>Select Team</option>
-                      {teams.map((team: Team, index: number) => (
+                      {teams?.map((team: Team, index: number) => (
                         <option key={index} value={team.pk}>
                           {team.fields.name}
                         </option>
@@ -324,7 +320,7 @@ export const EditDriver = ({ driver }: { driver: Driver }) => {
             <Divider css={{ my: '$5' }} />
             <Modal.Footer>
               <Button auto type='submit' className='bg-primary text-black'>
-                Update Driver
+                Edit Driver
               </Button>
             </Modal.Footer>
           </form>

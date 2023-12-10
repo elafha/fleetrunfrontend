@@ -108,8 +108,26 @@ export const OrdersContextProvider = ({
       refreshOrders()
       return
     }
-    console.log('status: ', status)
     const filteredOrders = orders.filter((driver) => driver.status === status)
+    setOrders(filteredOrders)
+  }
+
+  const handleSelectDate = ({
+    dateFrom,
+    dateTo,
+  }: {
+    dateFrom: Date
+    dateTo: Date
+  }) => {
+    if (dateFrom === null || dateTo === null) {
+      refreshOrders()
+      return
+    }
+    const filteredOrders = orders.filter(
+      (order) =>
+        new Date(order.date).getTime() >= dateFrom.getTime() &&
+        new Date(order.date).getTime() <= dateTo.getTime()
+    )
     setOrders(filteredOrders)
   }
 
