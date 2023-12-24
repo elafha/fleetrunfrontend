@@ -1,8 +1,6 @@
-import { Button, Loading, Modal, Text, Tooltip } from '@nextui-org/react'
+import { Loading, Modal, Text } from '@nextui-org/react'
 import React from 'react'
-import { Flex } from '../styles/flex'
-import { BinIcon } from '@/components/icons/areas'
-import { ordersTableCols, paymentTableCols } from '../table/data'
+import { paymentTableCols } from '../table/data'
 import { PrintIcon } from '../icons/table'
 import { useReactToPrint } from 'react-to-print'
 
@@ -83,15 +81,15 @@ export const MakePayment = ({ id }: { id: number }) => {
               <button className='h-11 px-12 bg-gray-400 rounded font-medium text-lg shadow-lg hover:bg-opacity-90 transition-all duration-300'>
                 Cancel
               </button>
-              <button className='h-11 px-12 bg-primary rounded font-medium text-lg shadow-lg hover:bg-opacity-90 transition-all duration-300'>
+              <button
+                className='h-11 px-12 bg-primary rounded font-medium text-lg shadow-lg hover:bg-opacity-90 transition-all duration-300'
+                onClick={() => handlePrint()}
+              >
                 Save
               </button>
               <button
                 className='flex items-center gap-x-2 h-11 px-12 bg-primary rounded font-medium text-lg shadow-lg hover:bg-opacity-90 transition-all duration-300'
-                onClick={
-                  () => handlePrint()
-                  //exportToExcel({ name: 'reports', data: reports })
-                }
+                onClick={() => handlePrint()}
               >
                 <span>Print</span>
                 <PrintIcon />
@@ -171,7 +169,7 @@ const Table = () => {
               <tbody>
                 {fakepaymentTableRows?.map((order: any, index: number) => (
                   <tr
-                    key={order.id}
+                    key={index}
                     // make table striped by adding bg-gray-50 to odd rows
                     className={`border-b transition duration-200 ease-in-out hover:bg-yellow-100 
                       ${index % 2 === 0 ? ' bg-gray-200' : ''}

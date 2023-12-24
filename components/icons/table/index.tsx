@@ -1,4 +1,4 @@
-import { Svg } from "@/components/styles/svg"
+import { Svg } from '@/components/styles/svg'
 
 interface Props {
   size?: number
@@ -56,37 +56,41 @@ export const DeleteIcon = ({ fill, size, height, width, ...props }: Props) => {
   )
 }
 
+export const NotesIcon = ({ fill, size, height, width, ...props }: Props) => {
+  return (
+    <svg
+      width={size || width || 20}
+      height={size || height || 21}
+      viewBox='0 0 20 21'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      {...props}
+    >
+      <path
+        d='M10.2392 5.93449L1 15.1736V19.7932H5.61958L14.8587 10.554M10.2392 5.93449L13.5521 2.62148L13.5542 2.61952C14.0101 2.16348 14.2386 1.93505 14.5019 1.8495C14.7339 1.77413 14.9837 1.77413 15.2157 1.8495C15.4788 1.93499 15.707 2.16315 16.1624 2.61855L18.1717 4.62784C18.629 5.0852 18.8578 5.31398 18.9435 5.57768C19.0189 5.80963 19.0188 6.05948 18.9435 6.29144C18.8579 6.55494 18.6295 6.78338 18.1727 7.24008L18.1717 7.24106L14.8587 10.554M10.2392 5.93449L14.8587 10.554'
+        stroke='#5E5E5E'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  )
+}
+
 export const EditIcon = ({ fill, size, height, width, ...props }: Props) => {
   return (
     <svg
-      width={size || width || 24}
-      height={size || height || 24}
+      width={size || width || 20}
+      height={size || height || 20}
       viewBox='0 0 20 20'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
       {...props}
     >
       <path
-        d='M11.05 3.00002L4.20835 10.2417C3.95002 10.5167 3.70002 11.0584 3.65002 11.4334L3.34169 14.1334C3.23335 15.1084 3.93335 15.775 4.90002 15.6084L7.58335 15.15C7.95835 15.0834 8.48335 14.8084 8.74168 14.525L15.5834 7.28335C16.7667 6.03335 17.3 4.60835 15.4583 2.86668C13.625 1.14168 12.2334 1.75002 11.05 3.00002Z'
-        stroke={fill}
-        strokeWidth={1.5}
-        strokeMiterlimit={10}
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      />
-      <path
-        d='M9.90833 4.20831C10.2667 6.50831 12.1333 8.26665 14.45 8.49998'
-        stroke={fill}
-        strokeWidth={1.5}
-        strokeMiterlimit={10}
-        strokeLinecap='round'
-        strokeLinejoin='round'
-      />
-      <path
-        d='M2.5 18.3333H17.5'
-        stroke={fill}
-        strokeWidth={1.5}
-        strokeMiterlimit={10}
+        d='M6 10H14M10 14V6.5M10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10C19 14.9706 14.9706 19 10 19Z'
+        stroke='#64EA8A'
+        strokeWidth='2'
         strokeLinecap='round'
         strokeLinejoin='round'
       />
@@ -135,9 +139,30 @@ export const PrintIcon = ({ fill, size, height, width, ...props }: Props) => {
       <path
         d='M7 20.5H4C2.34314 20.5 1 19.1569 1 17.5V11.5C1 9.01473 3.01473 7 5.5 7H7M7 20.5V16H22V20.5M7 20.5V22C7 23.6569 8.34314 25 10 25H19C20.6569 25 22 23.6569 22 22V20.5M7 7V4C7 2.34314 8.34314 1 10 1H19C20.6569 1 22 2.34314 22 4V7M7 7H22M22 20.5H25C26.6569 20.5 28 19.1569 28 17.5V11.5C28 9.01473 25.9854 7 23.5 7H22M19 11.5H22'
         stroke='black'
-        stroke-width='2'
-        stroke-linecap='round'
-        stroke-linejoin='round'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </Svg>
+  )
+}
+
+export const CheckedIcon = ({ fill, size, height, width, ...props }: Props) => {
+  return (
+    <Svg
+      width={size || width || 20}
+      height={size || height || 16}
+      viewBox='0 0 10 8'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      {...props}
+    >
+      <path
+        d='M1.5 4.5L3.5 6.5L8.5 1.5'
+        stroke='#FFDB00'
+        strokeWidth='1.5'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
     </Svg>
   )

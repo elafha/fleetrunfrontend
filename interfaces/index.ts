@@ -73,37 +73,55 @@ export interface DriverTeam {
   country: string
 }
 
-interface DriverTeamMember {
+export interface DriverTeamMember {
   id: number
   name: string
 }
 
-interface Item {
+export interface Item {
   id: string
   name: string
   quantity: number
+}
+
+interface Client {
+  id: string
+  name: string
+  image: string
+  address: string
+  phone: string
+}
+
+interface Customer {
+  id: string
+  name: string
+  image: string
+  address: string
+  phone: string
 }
 
 export interface Order {
   id: string
   date: string
   time: string
-  client: string
-  clientName: string
-  driver: string
+  customer: Customer
+  client: Client
+  driverId: string
   driverName: string
   distance: number
   city: string
   value: number
   deliveryFee: number
   status: string
-  isPaid: boolean
+  clientPaid: boolean
+  driverPaid: boolean
   location: {
     latitude: number
     longitude: number
-  }
-  address: string
-  phone: string
+  } | null
+  duration: number
+  startTime: number
+  endTime: number
   items: Item[]
 }
 
@@ -126,7 +144,8 @@ export interface Governorate {
   countryId: string
   countryName: string
   orderFee: number
-  driverFee: number
+  price: number
+  additional: number
 }
 
 export interface City {
@@ -135,7 +154,8 @@ export interface City {
   governorateId: string
   governorateName: string
   orderFee: number
-  driverFee: number
+  price: number
+  additional: number
 }
 
 export interface Account {
@@ -146,6 +166,8 @@ export interface Account {
   website: string
   phone: string
   branches: { id: string; name: string }[]
+  teams: { id: string; name: string }[]
+  admins: { id: string; name: string }[]
 }
 
 export interface Branch {
@@ -234,6 +256,7 @@ export interface TeamsReport extends ClientsReport {}
 export interface SupportChat {
   id: number
   text: string
+  date?: string
 }
 
 export interface SupportTeamMember {
@@ -241,4 +264,30 @@ export interface SupportTeamMember {
   name: string
   chats: SupportChat[]
   unread: number
+}
+
+export interface AccessProfile {
+  id: number
+  name: string
+  permissions: string[]
+}
+
+export interface UserAccess {
+  id: number
+  username: string
+  email: string
+  accessProfile: string
+  clients: string[]
+}
+
+export interface Note {
+  date: string
+  time: string
+  text: string
+}
+
+export interface SubLink {
+  title: string
+  isActive?: boolean
+  href?: string
 }

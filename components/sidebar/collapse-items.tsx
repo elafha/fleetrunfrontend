@@ -55,6 +55,13 @@ export const CollapseItems = ({
               '&:hover': {
                 bg: '$accents2',
               },
+              ...(isActive
+                ? {
+                    '& svg path': {
+                      stroke: '#FFDB00 !important',
+                    },
+                  }
+                : { '&:hover': { bg: '$accents2' } }),
             }}
             justify={'between'}
             onClick={handleToggle}
@@ -100,7 +107,7 @@ export const CollapseItems = ({
         ))}
       </Collapse>
       {isActive && (
-        <div className='absolute w-3 h-11 top-0 -right-5 bg-primary transition-all duration-300' />
+        <div className='absolute w-3 h-[68px] -top-3 -right-5 bg-primary transition-all duration-300' />
       )}
     </Flex>
   )

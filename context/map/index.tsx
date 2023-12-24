@@ -56,6 +56,7 @@ export const MapContextProvider = ({
 
   const handleSelectOrder = (id: string) => {
     setSelectedOrder(id)
+    console.log('select driver: ', id)
   }
 
   const handleSelectDriver = (id: string) => {
@@ -69,41 +70,59 @@ export const MapContextProvider = ({
   const fetchOrders = () => {
     const arr = []
     for (let i = 0; i < 20; i++) {
-      const fakeOrder: any = {
-        id: faker.number.int({ min: 1000, max: 10000 }),
-        restaurant: faker.company.name(),
-        restaurantId: faker.string.uuid(),
-        restaurantImage: faker.image.url(),
-        restaurantAddress: faker.location.streetAddress(),
-        restaurantPhone: faker.phone.number(),
-        customer: faker.person.firstName(),
-        customerId: faker.string.uuid(),
-        customerImage: faker.image.avatar(),
-        customerAddress: faker.location.streetAddress(),
-        customerPhone: faker.phone.number(),
+      const fakeOrder: Order = {
+        id: faker.number.int({ min: 1000, max: 10000 }).toString(),
+        date: faker.date.past().toLocaleDateString(),
+        value: faker.number.int({ max: 1000, min: 0 }),
+        client: {
+          name: faker.company.name(),
+          id: faker.string.uuid(),
+          image: faker.image.url(),
+          address: faker.location.streetAddress(),
+          phone: faker.phone.number(),
+        },
+        customer: {
+          id: faker.string.uuid(),
+          name: faker.person.firstName(),
+          image: faker.image.avatar(),
+          address: faker.location.streetAddress(),
+          phone: faker.phone.number(),
+        },
         duration: faker.number.int(),
         startTime: faker.date.past().getTime(),
         endTime: faker.date.future().getTime(),
+        distance: faker.number.int(),
+        time: faker.date.past().toLocaleTimeString(),
         driverId: faker.string.uuid(),
+        driverName: faker.person.firstName(),
+        city: faker.address.city(),
         status: orderStatus[faker.number.int({ max: 3, min: 0 })].value,
-        items: [
-          {
+        deliveryFee: faker.number.int({ max: 100, min: 0 }),
+        location:
+          faker.number.int({ max: 2, min: 1 }) == 1
+            ? {
+                latitude: faker.location.latitude({ max: 22, min: 21 }),
+                longitude: faker.location.longitude({
+                  max: 40,
+                  min: 39,
+                }),
+              }
+            : null,
+        items: Array.from(
+          { length: faker.number.int({ max: 5, min: 1 }) },
+          () => ({
+            id: faker.number.int({ min: 1000, max: 10000 }).toString(),
             name: faker.commerce.productName(),
             quantity: faker.number.int({ max: 5, min: 1 }),
-          },
-          {
-            name: faker.commerce.productName(),
-            quantity: faker.number.int({ max: 5, min: 1 }),
-          },
-          {
-            name: faker.commerce.productName(),
-            quantity: faker.number.int({ max: 5, min: 1 }),
-          },
-        ],
+          })
+        ),
+        clientPaid: faker.datatype.boolean(),
+        driverPaid: faker.datatype.boolean(),
       }
       arr.push(fakeOrder)
     }
-    setOrders(arr as Order[])
+    setOrders(arr)
+    setSelectedOrder(arr[0]?.id)
   }
 
   const fetchDrivers = () => {
@@ -136,6 +155,7 @@ export const MapContextProvider = ({
       arr.push(fakeDriver)
     }
     setDrivers(arr as any[])
+    setSelectedDriver(arr[0]?.id)
   }
 
   useEffect(() => {
@@ -143,10 +163,10 @@ export const MapContextProvider = ({
     // fetchDrivers()
   }, [])
 
-  useEffect(() => {
-    setSelectedDriver(drivers[0]?.id)
-    setSelectedOrder(orders[0]?.id)
-  }, [drivers, orders])
+  // useEffect(() => {
+  //   setSelectedDriver(drivers[0]?.id)
+  //   setSelectedOrder(orders[0]?.id)
+  // }, [drivers, orders])
 
   return (
     <MapContext.Provider

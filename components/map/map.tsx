@@ -1,15 +1,15 @@
 import React from 'react-dom'
 import { renderToString } from 'react-dom/server'
 import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-easybutton/src/easy-button.js'
 import 'leaflet-easybutton/src/easy-button.css'
 import * as L from 'leaflet'
 import { MapPinIcon } from '../icons/map'
-import { Driver } from '@/interfaces'
 import { getDriversInArea } from '@/lib/api/map'
 import { useMapContext } from '@/context/map'
+import { Driver } from '@/interfaces'
 
 // create a custom icon with L.divIcon and reactDOM.renderToString
 const icon = (image?: string, symbol?: string) =>
@@ -29,7 +29,7 @@ const icon = (image?: string, symbol?: string) =>
 
 const Map = () => {
   const [map, setMap] = useState<any>(null)
-  const { drivers, setDrivers } = useMapContext()
+  const { setDrivers } = useMapContext()
 
   // add an event listener on map: load, move, zoom, etc.
   useEffect(() => {
@@ -74,12 +74,59 @@ const Map = () => {
     })
   }, [map])
 
+  const fetchDriversEachInterval = async () => {
+    const [min_lat, min_lng, max_lat, max_lng] = map
+      .getBounds()
+      .toBBoxString()
+      .split(',')
+
+    const records = await getDriversInArea({
+      min_lat,
+      min_lng,
+      max_lat,
+      max_lng,
+    })
+
+    if (!records) return
+    setDrivers(
+      records.map((record: any) => {
+        return {
+          id: record.pk,
+          username: record.fields.username,
+          email: record.fields.email,
+          team: record.fields.team_id,
+          completedTasks: record.fields.completed_tasks,
+          inProgressTasks: record.fields.in_progress_tasks,
+          warnings: record.fields.warnings,
+          activeHours: record.fields.active_hours,
+          image: record.fields.image,
+          status: record.fields.status,
+          location: {
+            latitude: record.location.latitude,
+            longitude: record.location.longitude,
+          },
+          orders: record.fields.orders,
+          phone: record.fields.phone_number,
+        }
+      })
+    )
+  }
+
+  // launch fetchDriversEachInterval every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!map) return
+      fetchDriversEachInterval()
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [map])
+
   return (
-    <div className=''>
+    <>
       <MapContainer
         center={[21.3891, 39.8579]}
-        zoom={13}
-        scrollWheelZoom={true}
+        zoom={10}
+        scrollWheelZoom={false}
         ref={setMap}
         style={{
           height: '100%',
@@ -97,20 +144,27 @@ const Map = () => {
       >
         <TileLayer
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          className='absolute inset-0'
+          className='absolute inset-0 z-0'
         />
 
         {/* <LocationMarker /> */}
-        <DriversMarkers drivers={drivers} />
+        <DriversMarkers />
       </MapContainer>
-    </div>
+    </>
   )
 }
 
-const DriversMarkers = ({ drivers }: { drivers: Driver[] }) => {
+const DriversMarkers = () => {
+  const { drivers } = useMapContext()
+
+  // re-render the markers when drivers change
+  // useEffect(() => {
+  //   console.log(drivers)
+  // }, [drivers])
+
   return (
     <>
-      {drivers?.map((driver) => (
+      {drivers?.map((driver: Driver, index: number) => (
         <Marker
           key={driver.id}
           position={[

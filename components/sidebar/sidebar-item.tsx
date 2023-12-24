@@ -2,9 +2,6 @@ import { Text, Link } from '@nextui-org/react'
 import NextLink from 'next/link'
 import React from 'react'
 import { Flex } from '../styles/flex'
-import { Box } from '../styles/box'
-import { Sidebar } from './sidebar.styles'
-import { useRouter } from 'next/router'
 import { useSidebarContext } from '../layout/layout-context'
 
 interface SubLink {
@@ -80,7 +77,7 @@ export const SidebarItem = ({
           </Text>
         </Flex>
         {isActive && (
-          <div className='absolute -right-5 w-3 h-11 bg-primary transition-all duration-300' />
+          <div className='absolute w-3 h-[68px] -top-3 -right-5 bg-primary transition-all duration-300' />
         )}
       </Link>
     </NextLink>

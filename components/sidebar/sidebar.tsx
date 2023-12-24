@@ -18,7 +18,7 @@ import {
   OrdersIcon,
   ReportsIcon,
 } from '../icons/sidebar'
-import { Text } from '@nextui-org/react'
+import { Divider, Text } from '@nextui-org/react'
 import Image from 'next/image'
 import { CollapseItems } from './collapse-items'
 import { signOut } from 'next-auth/react'
@@ -48,13 +48,6 @@ export const SidebarWrapper = () => {
       href: '/reports',
       subLinks: [],
     },
-    // {
-    //   title: 'Settings',
-    //   icon: <SettingsIcon />,
-    //   isActive: router.pathname === '/settings',
-    //   href: '/settings',
-    //   subLinks: [],
-    // },
     {
       title: 'Clients',
       icon: <ClientsIcon />,
@@ -140,6 +133,29 @@ export const SidebarWrapper = () => {
       href: '/support',
       subLinks: [],
     },
+    {
+      title: 'Settings',
+      icon: <SettingsIcon />,
+      isActive: router.pathname.includes('/settings'),
+      href: '/settings',
+      subLinks: [
+        {
+          title: 'Access Profiles',
+          isActive: router.pathname === '/settings/access-profiles',
+          href: '/settings/access-profiles',
+        },
+        {
+          title: 'Users Access',
+          isActive: router.pathname === '/settings/users-access',
+          href: '/settings/users-access',
+        },
+        {
+          title: 'Delivery Settings',
+          isActive: router.pathname === '/settings/delivery-settings',
+          href: '/settings/delivery-settings',
+        },
+      ],
+    },
   ]
 
   return (
@@ -154,8 +170,8 @@ export const SidebarWrapper = () => {
     >
       {collapsed ? <Sidebar.Overlay onClick={setCollapsed} /> : null}
 
-      <Sidebar collapsed={collapsed}>
-        <Sidebar.Header className='w-full flex items-center justify-start'>
+      <Sidebar collapsed={collapsed} className='relative'>
+        <Sidebar.Header className='w-full flex items-center justify-start mb-3'>
           <Image
             src='/images/logo.png'
             alt='Company'
@@ -163,12 +179,15 @@ export const SidebarWrapper = () => {
             height={50}
             className='object-contain w-full h-full'
           />
-          <p className='text-xl font-medium'>FleetRun</p>
+          <p className='text-2xl font-medium'>
+            <span className='text-primary'>Fleet</span>Run
+          </p>
         </Sidebar.Header>
-        <Flex direction={'column'} justify={'between'} css={{ height: '100%' }}>
+        <Flex direction={'column'} justify={'between'} css={{ height: '95%' }}>
           <Sidebar.Body className='w-full'>
             {sidebarLinks?.map((link, index) => (
-              <div key={index}>
+              <div key={index} className='w-full flex flex-col'>
+                <Divider className='-mt-3 absolute inset-x-0' />
                 {link.subLinks.length > 0 ? (
                   <CollapseItems
                     title={link.title}
