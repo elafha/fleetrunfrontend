@@ -1,6 +1,5 @@
 You can see the demo here: https://restaurant-driver-app.vercel.app/
 
-```
 ## For Run
 
 Install dependencies
