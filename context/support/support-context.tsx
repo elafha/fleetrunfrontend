@@ -1,15 +1,18 @@
-import { SupportTeamMember } from '@/interfaces'
+import { firestore } from '@/firebase/support'
+import { Chat, ChatMessage, SupportTeamMember } from '@/interfaces'
+import { fetchChatMessages } from '@/lib/api/support'
+import { collection, collectionGroup, onSnapshot } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 
 export const SupportContext = React.createContext({})
 
 export const useSupportContext: {
   (): {
-    supportTeam: SupportTeamMember[]
-    selectedMember: SupportTeamMember
+    chats: Chat[]
+    chatMessages: ChatMessage[]
+    selectedChat: Chat
     loading: boolean
-    refreshSupport: () => Promise<void>
-    handleSelectMember: (id: number) => void
+    handleSelectChat: (id: string) => void
   }
 } = () => React.useContext(SupportContext as any)
 
@@ -18,169 +21,85 @@ export const SupportContextProvider = ({
 }: {
   children: React.ReactNode
 }) => {
-  const [supportTeam, setSupportTeam] = useState<SupportTeamMember[]>(
-    [] as SupportTeamMember[]
-  )
-  const [selectedMember, setselectedMember] = useState<SupportTeamMember>(
-    {} as SupportTeamMember
-  )
-
-  const support = [
-    {
-      id: 1,
-      text: "Hi there! I am wondering if you can help me with a problem I've been having.",
-      date: '06/01/2023',
-    },
-    {
-      id: 2,
-      text: "Oh, hey. I'm not sure, but I'll do my best.",
-      date: '06/01/2023',
-    },
-    {
-      id: 3,
-      text: "I've been trying to install this package but it's not working and I don't know why.",
-      date: '06/01/2023',
-    },
-    {
-      id: 4,
-      text: 'What package are you trying to install?',
-      date: '06/01/2023',
-    },
-    {
-      id: 5,
-      text: "It's called @vue/devtools",
-      date: '06/01/2023',
-    },
-    {
-      id: 6,
-      text: "Oh, I think I know what's going on. Give me a second and I'll get back to you.",
-      date: '07/01/2023',
-    },
-    {
-      id: 7,
-      text: 'Okay, thank you!',
-      date: '07/01/2023',
-    },
-    {
-      id: 8,
-      text: "Okay, I'm back. Are you using npm or yarn?",
-      date: '07/01/2023',
-    },
-    {
-      id: 9,
-      text: "I'm using npm.",
-      date: '07/01/2023',
-    },
-    {
-      id: 10,
-      text: 'Okay, try running this command: npm install -g @vue/devtools',
-      date: '07/01/2023',
-    },
-    {
-      id: 11,
-      text: "Okay, I'll try that.",
-      date: '07/01/2023',
-    },
-    {
-      id: 12,
-      text: 'Did that work?',
-      date: '07/01/2023',
-    },
-    {
-      id: 13,
-      text: "No, it didn't. I'm still getting the same error.",
-      date: '07/01/2023',
-    },
-    {
-      id: 14,
-      text: "Okay, I'm not sure what's going on. Let me do some research and I'll get back to you.",
-      date: '09/01/2023',
-    },
-    {
-      id: 15,
-      text: 'Okay, thank you!',
-      date: '09/01/2023',
-    },
-    {
-      id: 16,
-      text: "Okay, I'm back. Are you using npm or yarn?",
-      date: '09/01/2023',
-    },
-    {
-      id: 17,
-      text: "I'm using npm.",
-      date: '09/01/2023',
-    },
-    {
-      id: 18,
-      text: 'Okay, try running this command: npm install -g @vue/devtools',
-      date: '09/01/2023',
-    },
-  ]
-
+  const [selectedChat, setSelectedChat] = useState<Chat>({} as Chat)
+  const [chats, setChats] = useState<Chat[]>([])
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [loading, setLoading] = useState(false)
 
-  const refreshSupport = async () => {
-    setLoading(true)
+  const handleSelectChat = async (id: string) => {
+    const chat = chats?.find((chat) => chat.id === id)
 
-    const supportTeam: SupportTeamMember[] = [
-      {
-        id: 1,
-        name: 'Samir Khaled',
-        chats: support,
-        unread: 8,
-      },
-      {
-        id: 2,
-        name: 'Ahmed Mohamed',
-        chats: support,
-        unread: 0,
-      },
-      {
-        id: 3,
-        name: 'Mohamed Ahmed',
-        chats: support,
-        unread: 10,
-      },
-      {
-        id: 4,
-        name: 'Nessrine Khaled',
-        chats: support,
-        unread: 1,
-      },
-    ]
-
-    setSupportTeam(supportTeam)
-
-    setLoading(false)
-  }
-
-  const handleSelectMember = (id: number) => {
-    const member = supportTeam.find((member) => member.id === id)
-
-    if (member) {
-      setselectedMember(member)
+    if (chat) {
+      setLoading(true)
+      // track adding new messages in chat messages subcollection
+      const unsub = onSnapshot(
+        collectionGroup(firestore, 'messages'),
+        async (snapshot: any) => {
+          const messages: any[] = await fetchChatMessages(id)
+          setChatMessages(messages)
+          setLoading(false)
+        }
+      )
+      setSelectedChat(chat)
+      setLoading(false)
+      return unsub
     }
   }
 
+  // CHATS
   useEffect(() => {
-    refreshSupport()
+    const getChats = () => {
+      const unsub = onSnapshot(collection(firestore, 'chats'), (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          setChats((prevChats: any) => {
+            if (change.type === 'added') {
+              return [
+                ...prevChats.filter((chat: Chat) => chat.id !== change.doc.id),
+                {
+                  id: change.doc.id,
+                  ...change.doc.data(),
+                } as Chat,
+              ]
+            } else if (change.type === 'modified') {
+              return prevChats.map((chat: Chat) =>
+                chat.id === change.doc.id
+                  ? {
+                      id: change.doc.id,
+                      ...change.doc.data(),
+                    }
+                  : chat
+              )
+            } else if (change.type === 'removed') {
+              return prevChats.filter(
+                (chat: Chat) => chat.id !== change.doc.id
+              ) as Chat[]
+            }
+            return prevChats
+          })
+
+          // set selected chat if it's not set
+          if (!selectedChat.id) {
+            console.log('selecting chat')
+            handleSelectChat(change.doc.id)
+          }
+        })
+      })
+
+      return () => {
+        unsub()
+      }
+    }
+    getChats()
   }, [])
-
-  useEffect(() => {
-    if (supportTeam.length > 0) {
-      setselectedMember(supportTeam[0])
-    }
-  }, [supportTeam])
 
   return (
     <SupportContext.Provider
       value={{
-        supportTeam,
-        selectedMember,
+        chats,
+        chatMessages,
+        selectedChat,
         loading,
-        refreshSupport,
-        handleSelectMember,
+        handleSelectChat,
       }}
     >
       {children}
