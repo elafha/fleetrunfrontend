@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import CheckAuthGuard from '@/components/guards/check-auth-guard'
 import { MapContextProvider } from '@/context/map'
 import { SessionProvider } from 'next-auth/react'
+import { Toaster } from 'react-hot-toast'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const path = useRouter().pathname.split('/')[1]
@@ -15,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <SessionProvider session={session}>
       <CheckAuthGuard>
         <NextUIProvider>
-          {path === '' || path === 'register' ? (
+          {path === '' ? (
             <main className='w-full h-fit flex flex-col items-center'>
               <Component {...pageProps} />
             </main>
@@ -30,6 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           )}
         </NextUIProvider>
       </CheckAuthGuard>
+      <Toaster />
     </SessionProvider>
   )
 }
